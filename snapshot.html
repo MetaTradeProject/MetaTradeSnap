@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+    <!-- Bootstrap CSS -->
+    <style>
+        div{
+            white-space:nowrap;
+        }
+
+        .body{
+            background-color: #ebf5fd;
+        }
+        .container {
+            background-color: ghostwhite;
+            width: auto;
+            margin-left: 15%;
+            margin-right: 15%;
+            margin-top: 50px;
+            height: auto;
+            border-radius: 20px;
+        }
+        .table-hover{
+            table-layout: fixed;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-radius: 20px;
+        }
+
+        .table th, .table td {
+            text-align: left;
+            vertical-align: top!important;
+            font-size: 20px;
+        }
+
+        #block-list {border-left: 0px; border-right:0px; border-bottom: 0px; border-top:0px}
+        #block-list th{border-left: 0px; border-right: 0px; border-bottom: 0px; border-top:0px}
+        #block-list td{border-left: 0px; border-right: 0px; border-bottom: 0px; border-top:0px}
+
+        .table-hover>tbody>tr:hover {
+            background-color: #ebf5fd;
+            padding: 0;
+        }
+
+        .block-ex-info{
+        }
+
+        .hide-table-padding {
+            padding: 0;
+        }
+        .expand-td{
+            padding: 0;
+        }
+        .collapsein{
+            padding: 0;
+        }
+
+
+
+    </style>
+    <title>MetaTrade Snapshot</title>
+</head>
+<body class="body">
+    <div class="container">
+        <h2>MetaTrade Chains</h2>
+        <p>MetaTrade 网络中的所有Block</p>
+        <table id="block-list" class="table table-hover"><tbody></tbody></table>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+    <script type="text/javascript">
+        let snap_msg;
+
+        $('#block-list').bootstrapTable({
+            columns: [
+                {
+                field: 'id', title: 'Block Index'
+            }, {
+                field: 'tc', title: 'Trade Count'
+            },{
+                field: 'com', title: 'Commission'
+            },{
+                field: 'amount', title: 'Total amount'
+            }
+            ]
+        });
+
+
+        const Http = new XMLHttpRequest();
+        const url='https://47.102.200.110/meta-trade/snap';
+        Http.open("GET", url);
+        Http.send();
+
+        Http.onreadystatechange = (e) => {
+            if (Http.readyState === 4 && Http.status === 200){
+                snap_msg = JSON.parse(Http.responseText);
+                const block_chain_json = snap_msg["chain"]
+                for(let i = 0; i < block_chain_json.length; i++) {
+                    const row =
+                        {
+                            "id": "",
+                            "tc": "",
+                            "com": "",
+                            "amount": ""
+                        };
+                    let block = block_chain_json[i]
+                    row.id = (i+1).toString()
+                    row.tc = block["blockBody"].length.toString()
+                    let commission = 0, total = 0
+                    for(let j = 0; j < block["blockBody"].length; j++){
+                        commission += block["blockBody"][j]["commission"]
+                        total += block["blockBody"][j]["amount"]
+                    }
+                    row.com = commission.toString()
+                    row.amount = total.toString()
+                    const $element = $('#block-list').bootstrapTable('append', row);
+
+
+                    $element.children().children().attr('id', 'blockinfo'+i.toString())
+                    $element.children().children().attr('data-toggle', 'collapse')
+                    $element.children().children().attr('data-parent', '#blockinfo'+i.toString())
+                    $element.children().children().attr('href', '#collapse'+i.toString())
+                    $element.children().children().attr('aria-controls', 'collapse'+i.toString())
+
+                    const  index = i
+                    $element.append('<tr class="hide-table-padding">\n' +
+                        '        <td colspan="4" class="expand-td">\n' +
+                        '          <div class="block-ex-info" id="collapse'+i.toString()+'\"' + ' class="collapsein">\n' +
+                        '     prevHash: ' + snap_msg["chain"][index]["prevHash"]  +
+                        '<br />merkleHash: ' + snap_msg["chain"][index]["merkleHash"] +
+                        '<br />proofLevel: '+ snap_msg["chain"][index]["proofLevel"] +
+                        '<br />proof: '+ snap_msg["chain"][index]["proof"]  +
+                        '          </div></td>\n' +
+                        '      </tr>')
+                }
+            }
+        }
+    </script>
+</body>
+</html>
