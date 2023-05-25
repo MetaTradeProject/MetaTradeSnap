@@ -103,15 +103,16 @@
                 }
                 else{
                     $element.after('<tr id="'+ this_tr_id +'">\n' +
-                        '        <td colspan="4">\n' +
-                        '          <div class="block-ex-info" id="blockdetail'+index.toString()+'\"' + '>\n' +
-                        '     prevHash: ' + snap_msg["chain"][index]["prevHash"]  +
-                        '<br />merkleHash: ' + snap_msg["chain"][index]["merkleHash"] +
-                        '<br />proofLevel: '+ snap_msg["chain"][index]["proofLevel"] +
-                        '<br />proof: '+ snap_msg["chain"][index]["proof"]  +
-                        '          </div></td>\n' +
-                        '      </tr>')
-                        
+                    '        <td colspan="4">\n' +
+                    '          <div class="block-ex-info" id="blockdetail'+index.toString()+'\"' + '>\n' +
+                    '     prevHash: ' + snap_msg["chain"][index]["prevHash"]  +
+                    '<br />merkleHash: ' + snap_msg["chain"][index]["merkleHash"] +
+                    '<br />proofLevel: '+ snap_msg["chain"][index]["proofLevel"] +
+                    '<br />proof: '+ snap_msg["chain"][index]["proof"]  +
+                    '          </div></td>\n' +
+                    '      </tr>')
+                    
+                    $("#blockdetail"+index.toString()).slideDown(1000); 
                     is_expand_flag[index] = true
                 } 
             }
@@ -146,17 +147,7 @@
                     row.com = commission.toString()
                     row.amount = total.toString()
                     is_expand_flag.push(false)
-                    $('#block-list').bootstrapTable('append', row);
-
-
-                    // $element.children().children().attr('id', 'blockinfo'+i.toString())
-                    // $element.children().children().attr('data-toggle', 'collapse')
-                    // $element.children().children().attr('data-parent', '#blockinfo'+i.toString())
-                    // $element.children().children().attr('href', '#collapse'+i.toString())
-                    // $element.children().children().attr('aria-controls', 'collapse'+i.toString())
-
-                    // const  index = i
-                    
+                    $('#block-list').bootstrapTable('append', row);                    
                 }
             }
         }
