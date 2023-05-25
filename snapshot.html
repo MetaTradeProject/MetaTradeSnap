@@ -32,109 +32,70 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            border-radius: 20px;
         }
 
         .table th, .table td {
             text-align: left;
             vertical-align: top!important;
             font-size: 20px;
+            overflow: hidden;
         }
 
         #block-list {border-left: 0px; border-right:0px; border-bottom: 0px; border-top:0px}
         #block-list th{border-left: 0px; border-right: 0px; border-bottom: 0px; border-top:0px}
         #block-list td{border-left: 0px; border-right: 0px; border-bottom: 0px; border-top:0px}
 
+
+        #raw-list {border-left: 0px; border-right:0px; border-bottom: 0px; border-top:0px}
+        #raw-list th{border-left: 0px; border-right: 0px; border-bottom: 0px; border-top:0px}
+        #raw-list td{
+            border-left: 0px;
+            border-right: 0px;
+            border-bottom: 0px;
+            border-top:0px;
+        }
+
+        #trade-list {border-left: 0px; border-right:0px; border-bottom: 0px; border-top:0px}
+        #trade-list th{border-left: 0px; border-right: 0px; border-bottom: 0px; border-top:0px}
+        #trade-list td{
+            border-left: 0px;
+            border-right: 0px;
+            border-bottom: 0px;
+            border-top:0px;
+        }
+
         .table-hover>tbody>tr:hover {
             background-color: #ebf5fd;
             padding: 0;
         }
 
-
+        #trade-detail-info{
+            overflow: scroll;
+        }
     </style>
     <title>MetaTrade Snapshot</title>
 </head>
 <body class="body">
     <div class="container">
-        <h2>MetaTrade Chains</h2>
-        <p>MetaTrade 网络中的所有Block</p>
+        <h2>Chains</h2>
+        <p>MetaTrade 网络中的所有上链Block</p>
         <table id="block-list" class="table table-hover"><tbody></tbody></table>
+    </div>
+
+    <div class="container">
+        <h2>Mining Blocks</h2>
+        <p>MetaTrade 网络中等待被Mining的Block</p>
+        <table id="raw-list" class="table table-hover"><tbody></tbody></table>
+    </div>
+
+    <div class="container">
+        <h2>Trading pool</h2>
+        <p>MetaTrade 网络中交易池中的Trade</p>
+        <table id="trade-list" class="table table-hover"><tbody></tbody></table>
     </div>
     <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
-    <script type="text/javascript">
-        let snap_msg;
-        let is_expand_flag=[];
-
-        $('#block-list').bootstrapTable({
-            columns: [
-                {
-                field: 'id', title: 'Block Index'
-            }, {
-                field: 'tc', title: 'Trade Count'
-            },{
-                field: 'com', title: 'Commission'
-            },{
-                field: 'amount', title: 'Total amount'
-            }
-            ],
-            onClickRow: function(row, $element, field){
-                const index = row['id']-1
-                const this_tr_id = "tr-block-detail" + index.toString()
-
-                if(is_expand_flag[index]){
-                    is_expand_flag[index] = false
-                    $("#"+this_tr_id).remove()
-                }
-                else{
-                    $element.after('<tr id="'+ this_tr_id +'">\n' +
-                    '        <td colspan="4">\n' +
-                    '          <div class="block-ex-info" id="blockdetail'+index.toString()+'\"' + '>\n' +
-                    '     prevHash: ' + snap_msg["chain"][index]["prevHash"]  +
-                    '<br />merkleHash: ' + snap_msg["chain"][index]["merkleHash"] +
-                    '<br />proofLevel: '+ snap_msg["chain"][index]["proofLevel"] +
-                    '<br />proof: '+ snap_msg["chain"][index]["proof"]  +
-                    '          </div></td>\n' +
-                    '      </tr>')
-                    is_expand_flag[index] = true
-                } 
-            }
-        });
-
-
-        const Http = new XMLHttpRequest();
-        const url='https://47.102.200.110/meta-trade/snap';
-        Http.open("GET", url);
-        Http.send();
-
-        Http.onreadystatechange = (e) => {
-            if (Http.readyState === 4 && Http.status === 200){
-                snap_msg = JSON.parse(Http.responseText);
-                const block_chain_json = snap_msg["chain"]
-                for(let i = 0; i < block_chain_json.length; i++) {
-                    const row =
-                        {
-                            "id": "",
-                            "tc": "",
-                            "com": "",
-                            "amount": ""
-                        };
-                    let block = block_chain_json[i]
-                    row.id = (i+1).toString()
-                    row.tc = block["blockBody"].length.toString()
-                    let commission = 0, total = 0
-                    for(let j = 0; j < block["blockBody"].length; j++){
-                        commission += block["blockBody"][j]["commission"]
-                        total += block["blockBody"][j]["amount"]
-                    }
-                    row.com = commission.toString()
-                    row.amount = total.toString()
-                    is_expand_flag.push(false)
-                    $('#block-list').bootstrapTable('append', row);                    
-                }
-            }
-        }
-    </script>
+    <script src="js/snap.js"></script>
 </body>
 </html>

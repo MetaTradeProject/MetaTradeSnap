@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+  <!-- Bootstrap CSS -->
+  <style>
+    div{
+      white-space:nowrap;
+    }
+
+    .body{
+      background-color: #ebf5fd;
+    }
+    .container {
+      background-color: ghostwhite;
+      width: auto;
+      margin-left: 15%;
+      margin-right: 15%;
+      margin-top: 50px;
+      height: auto;
+      border-radius: 20px;
+    }
+    .table-hover{
+      table-layout: fixed;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      word-break:break-all
+    }
+
+    .table th, .table td {
+      text-align: left;
+      vertical-align: top!important;
+      font-size: 15px;
+      overflow: hidden;
+      text-overflow:ellipsis
+    }
+
+
+    #raw-block-trades {border-left: 0px; border-right:0px; border-bottom: 0px; border-top:0px}
+    #raw-block-trades th{border-left: 0px; border-right: 0px; border-bottom: 0px; border-top:0px}
+    #raw-block-trades td{
+      border-left: 0px;
+      border-right: 0px;
+      border-bottom: 0px;
+      border-top:0px;
+    }
+
+    .table-hover>tbody>tr:hover {
+      background-color: #ebf5fd;
+      padding: 0;
+    }
+
+    #raw-info {
+      overflow: scroll;
+    }
+
+  </style>
+  <title>MetaTrade Trades</title>
+</head>
+<body class="body">
+<div class="container">
+  <h2>Trades</h2>
+  <p id="raw-p"></p>
+  <table id="raw-block-trades" class="table table-hover"><tbody></tbody></table>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+<script src="js/raw.js"></script>
+</body>
+</html>
