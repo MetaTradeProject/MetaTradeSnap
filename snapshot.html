@@ -79,6 +79,7 @@
     <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
     <script type="text/javascript">
         let snap_msg;
+        let is_expand_flag=[];
 
         $('#block-list').bootstrapTable({
             columns: [
@@ -91,7 +92,29 @@
             },{
                 field: 'amount', title: 'Total amount'
             }
-            ]
+            ],
+            onClickRow: function(row, $element, field){
+                const index = row['id']-1
+                const this_tr_id = "tr-block-detail" + index.toString()
+
+                if(is_expand_flag[index]){
+                    is_expand_flag[index] = false
+                    $("#"+this_tr_id).remove()
+                }
+                else{
+                    $element.after('<tr id="'+ this_tr_id +'">\n' +
+                        '        <td colspan="4">\n' +
+                        '          <div class="block-ex-info" id="blockdetail'+index.toString()+'\"' + '>\n' +
+                        '     prevHash: ' + snap_msg["chain"][index]["prevHash"]  +
+                        '<br />merkleHash: ' + snap_msg["chain"][index]["merkleHash"] +
+                        '<br />proofLevel: '+ snap_msg["chain"][index]["proofLevel"] +
+                        '<br />proof: '+ snap_msg["chain"][index]["proof"]  +
+                        '          </div></td>\n' +
+                        '      </tr>')
+                        
+                    is_expand_flag[index] = true
+                } 
+            }
         });
 
 
@@ -122,25 +145,18 @@
                     }
                     row.com = commission.toString()
                     row.amount = total.toString()
-                    const $element = $('#block-list').bootstrapTable('append', row);
+                    is_expand_flag.push(false)
+                    $('#block-list').bootstrapTable('append', row);
 
 
-                    $element.children().children().attr('id', 'blockinfo'+i.toString())
-                    $element.children().children().attr('data-toggle', 'collapse')
-                    $element.children().children().attr('data-parent', '#blockinfo'+i.toString())
-                    $element.children().children().attr('href', '#collapse'+i.toString())
-                    $element.children().children().attr('aria-controls', 'collapse'+i.toString())
+                    // $element.children().children().attr('id', 'blockinfo'+i.toString())
+                    // $element.children().children().attr('data-toggle', 'collapse')
+                    // $element.children().children().attr('data-parent', '#blockinfo'+i.toString())
+                    // $element.children().children().attr('href', '#collapse'+i.toString())
+                    // $element.children().children().attr('aria-controls', 'collapse'+i.toString())
 
-                    const  index = i
-                    $element.append('<tr class="hide-table-padding">\n' +
-                        '        <td colspan="4" class="expand-td">\n' +
-                        '          <div class="block-ex-info" id="collapse'+i.toString()+'\"' + ' class="collapsein">\n' +
-                        '     prevHash: ' + snap_msg["chain"][index]["prevHash"]  +
-                        '<br />merkleHash: ' + snap_msg["chain"][index]["merkleHash"] +
-                        '<br />proofLevel: '+ snap_msg["chain"][index]["proofLevel"] +
-                        '<br />proof: '+ snap_msg["chain"][index]["proof"]  +
-                        '          </div></td>\n' +
-                        '      </tr>')
+                    // const  index = i
+                    
                 }
             }
         }
