@@ -50,20 +50,6 @@
             padding: 0;
         }
 
-        .block-ex-info{
-        }
-
-        .hide-table-padding {
-            padding: 0;
-        }
-        .expand-td{
-            padding: 0;
-        }
-        .collapsein{
-            padding: 0;
-        }
-
-
 
     </style>
     <title>MetaTrade Snapshot</title>
@@ -111,8 +97,6 @@
                     '<br />proof: '+ snap_msg["chain"][index]["proof"]  +
                     '          </div></td>\n' +
                     '      </tr>')
-                    
-                    $("#blockdetail"+index.toString()).slideDown(1000); 
                     is_expand_flag[index] = true
                 } 
             }
